@@ -2,10 +2,20 @@ import express from "express";
 import session from "express-session";
 import passport from "passport";
 import routes from "./routes/auth.mjs";
-import "./strategies/local-strategy.mjs"
+import mongoose from "mongoose";
+import "./strategies/local-strategy.mjs";
+import dotenv from "dotenv";
+dotenv.config();
+
 const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
+// mongoDB connection
+mongoose
+  .connect(process.env.DB_URL) //connect returns promise
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.log(`Error: ${err}`));
+
 // Session middleware
 app.use(
   session({
