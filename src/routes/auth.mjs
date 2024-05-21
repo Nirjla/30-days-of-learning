@@ -1,6 +1,8 @@
 import express, { response } from "express";
 import passport from "passport";
 import { User } from "../mongoose/schemas/user.mjs";
+import { createUserValidation } from "../utils/validationSchema.mjs";
+import { checkSchema, validationResult, matchedData } from "express-validator";
 
 const router = express.Router();
 router.post("/auth", passport.authenticate("local"), (request, response) => {
@@ -16,16 +18,33 @@ router.get("/auth/status", (request, response) => {
     return response.status(401).send({ status: "Not Authenticated" });
   }
 });
-router.post("/users", async (request, response) => {
-  const { body } = request;
-  const newUser = new User(body);
-  try {
-    const savedUser = await newUser.save();
-    return response.status(201).send(savedUser);
-  } catch (err) {
-    console.log(err);
-    return response.status(400);
+router.post(
+  "/users",
+  checkSchema(createUserValidation),
+  async (request, response) => {
+    const result = validationResult(request);
+    if (!result.isEmpty()) {
+      return response.status(400).send({ errors: result.array() });
+    }
+    const data = matchedData(request);
+    const newUser = new User(data);
+    try {
+      const savedUser = await newUser.save();
+      return response.status(201).send(savedUser);
+    } catch (err) {
+      console.log(err);
+      return response.status(400).send("Bad Request");
+    }
+  }
+);
+router.get("/auth/logout", (request, response) => {
+  if (request.isAuthenticated()) {
+    request.logout((err) => {
+      if (err) {
+        return response.status(400);
+      }
+      response.status(200).send({ status: "Logout Successfully" });
+    });
   }
 });
-
 export default router;

@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { users } from "../utils/constants.mjs";
+import { User } from "../mongoose/schemas/user.mjs";
 
 passport.serializeUser((user, done) => {
   console.log("Inside Serialize User");
@@ -8,11 +8,10 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
+passport.deserializeUser(async (id, done) => {
   console.log("Inside Deserialize User");
   try {
-    const findUser = users
-    .find((user) => user.id === id);
+    const findUser = await User.findById(id);
     if (!findUser) {
       throw new Error("User not found");
     }
@@ -23,21 +22,20 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(
-  new LocalStrategy((username, password, done) => {
+  new LocalStrategy(async (username, password, done) => {
     console.log(`Username: ${username}`);
     console.log(`Password: ${password}`);
-
     try {
-      const findUser = users.find((user) => user.username === username);
+      const findUser = await User.findOne({ username });
       if (!findUser) {
-        return done(null, false, { message: "User not found" });
+        throw new Error("User Not Found");
       }
       if (findUser.password !== password) {
-        return done(null, false, { message: "Invalid credentials" });
+        throw new Error("Bad Credentials");
       }
-      return done(null, findUser);
+      done(null, findUser);
     } catch (err) {
-      return done(err);
+      done(err, null);
     }
   })
 );
