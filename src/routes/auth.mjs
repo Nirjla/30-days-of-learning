@@ -3,6 +3,7 @@ import passport from "passport";
 import { User } from "../mongoose/schemas/user.mjs";
 import { createUserValidation } from "../utils/validationSchema.mjs";
 import { checkSchema, validationResult, matchedData } from "express-validator";
+import { hashPassword } from "../utils/helpers.mjs";
 
 const router = express.Router();
 router.post("/auth", passport.authenticate("local"), (request, response) => {
@@ -27,7 +28,8 @@ router.post(
       return response.status(400).send({ errors: result.array() });
     }
     const data = matchedData(request);
-    const newUser = new User(data);
+    const hashedPassword = hashPassword(data.password);
+    const newUser = new User({...data, password:hashedPassword});
     try {
       const savedUser = await newUser.save();
       return response.status(201).send(savedUser);
