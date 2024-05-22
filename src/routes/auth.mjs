@@ -20,7 +20,7 @@ router.get("/auth/status", (request, response) => {
   }
 });
 router.post(
-  "/users",
+  "/login",
   checkSchema(createUserValidation),
   async (request, response) => {
     const result = validationResult(request);
@@ -28,8 +28,8 @@ router.post(
       return response.status(400).send({ errors: result.array() });
     }
     const data = matchedData(request);
-    const hashedPassword = hashPassword(data.password);
-    const newUser = new User({...data, password:hashedPassword});
+    const hashedPassword = await hashPassword(data.password);
+    const newUser = new User({ ...data, password: hashedPassword });
     try {
       const savedUser = await newUser.save();
       return response.status(201).send(savedUser);

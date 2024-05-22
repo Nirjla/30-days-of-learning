@@ -6,6 +6,7 @@ export const hashPassword = async (password) => {
     console.log(`Salt:${salt}`);
     const hash = await bcrypt.hash(password, salt);
     console.log(`Hash:${hash}`);
+    return hash;
   } catch (err) {
     console.error(err.message);
   }

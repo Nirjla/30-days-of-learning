@@ -1,10 +1,11 @@
 import express from "express";
 import session from "express-session";
 import passport from "passport";
-import routes from "./routes/auth.mjs";
+import routes from "./routes/index.mjs";
 import mongoose from "mongoose";
 import "./strategies/local-strategy.mjs";
 import dotenv from "dotenv";
+import MongoStore from "connect-mongo";
 dotenv.config();
 
 const app = express();
@@ -25,6 +26,9 @@ app.use(
     cookie: {
       maxAge: 60000 * 60,
     },
+    store: MongoStore.create({
+      client: mongoose.connection.getClient(),
+    }),
   })
 );
 
