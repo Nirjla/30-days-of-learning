@@ -49,4 +49,8 @@ router.get("/auth/logout", (request, response) => {
     });
   }
 });
+// for discord strategy
+router.get("/auth/discord",(request,response)=>{
+  
+})
 export default router;
