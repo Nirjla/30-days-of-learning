@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express, { request, response } from "express";
 import passport from "passport";
 import { User } from "../mongoose/schemas/user.mjs";
 import { createUserValidation } from "../utils/validationSchema.mjs";
@@ -50,7 +50,15 @@ router.get("/auth/logout", (request, response) => {
   }
 });
 // for discord strategy
-router.get("/auth/discord",(request,response)=>{
-  
-})
+router.get("/auth/discord", passport.authenticate("discord"));
+//first endpoint is called then passpirt.authenticate this will redirect to third party platform once the authorize button is clicked this will redirect to the callbackURL so when the passport.authenticate is called the second time its going to take that code query parameter and its going to exchange it for an accessToken and refreshToken and then in the end it calls the verify function
+router.get(
+  "/auth/discord/redirect",
+  passport.authenticate("discord"),
+  (request, response) => {
+    console.log(request.session);
+    console.log(request.user);
+    return response.status(200);
+  }
+);
 export default router;

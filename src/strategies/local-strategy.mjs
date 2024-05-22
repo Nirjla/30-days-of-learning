@@ -4,24 +4,6 @@ import { User } from "../mongoose/schemas/user.mjs";
 import { comparePassword } from "../utils/helpers.mjs";
 import { response } from "express";
 
-passport.serializeUser((user, done) => {
-  console.log("Inside Serialize User");
-  console.log(user);
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  console.log("Inside Deserialize User");
-  try {
-    const findUser = await User.findById(id);
-    if (!findUser) {
-      throw new Error("User not found");
-    }
-    done(null, findUser);
-  } catch (err) {
-    done(err, null);
-  }
-});
 
 passport.use(
   new LocalStrategy(async (username, password, done) => {

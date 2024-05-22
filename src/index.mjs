@@ -2,10 +2,10 @@ import express from "express";
 import session from "express-session";
 import passport from "passport";
 import routes from "./routes/index.mjs";
-import mongoose from "mongoose";
-import "./strategies/local-strategy.mjs";
+import "./strategies/index.mjs";
 import dotenv from "dotenv";
 import MongoStore from "connect-mongo";
+import mongoose from "mongoose";
 dotenv.config();
 
 const app = express();
