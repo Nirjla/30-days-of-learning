@@ -7,7 +7,6 @@ dotenv.config();
 // console.log('CLIENT_ID:', process.env.CLIENT_ID);
 // console.log('CLIENT_SECRET:', process.env.CLIENT_SECRET);
 
-
 var scopes = ["identify", "guilds"];
 export default passport.use(
   new DiscordStrategy(
@@ -36,6 +35,7 @@ export default passport.use(
           const newUser = new DiscordUser({
             username: profile.username,
             discordId: profile.id,
+            type: "discord",
           });
           await newUser.save();
           done(null, newUser);

@@ -11,5 +11,9 @@ const DiscordUserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  type: {
+    type: mongoose.Schema.Types.String,
+    default: "discord",
+  },
 });
 export const DiscordUser = mongoose.model("DiscordUser", DiscordUserSchema);

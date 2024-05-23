@@ -4,12 +4,17 @@ import { User } from "../mongoose/schemas/user.mjs";
 import { createUserValidation } from "../utils/validationSchema.mjs";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { hashPassword } from "../utils/helpers.mjs";
+import "../strategies/index.mjs";
 
 const router = express.Router();
-router.post("/auth", passport.authenticate("local"), (request, response) => {
-  return response.status(200).send("Authenticated");
-  //complete syntax lekhnu parcha
-});
+router.post(
+  "/auth/login",
+  passport.authenticate("local"),
+  (request, response) => {
+    return response.status(200).send("Authenticated");
+    //complete syntax lekhnu parcha
+  }
+);
 router.get("/auth/status", (request, response) => {
   if (request.isAuthenticated()) {
     return response
@@ -20,7 +25,7 @@ router.get("/auth/status", (request, response) => {
   }
 });
 router.post(
-  "/login",
+  "/register",
   checkSchema(createUserValidation),
   async (request, response) => {
     const result = validationResult(request);

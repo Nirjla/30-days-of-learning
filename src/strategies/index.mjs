@@ -27,7 +27,7 @@ passport.deserializeUser(async (obj, done) => {
     done(err, null);
   }
 });
-passport.use("discord",discordStrategy);
-passport.use("local",localStrategy);
+passport.use("discord", discordStrategy);
+passport.use("local", localStrategy);
 
 export default passport;

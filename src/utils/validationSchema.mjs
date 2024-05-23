@@ -20,4 +20,5 @@ export const createUserValidation = {
       errorMessage: "Password must not be empty",
     },
   },
+  
 };

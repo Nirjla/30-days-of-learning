@@ -10,5 +10,9 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: true,
   },
+  type: {
+    type:  mongoose.Schema.Types.String,
+    default: "local", 
+  },
 });
 export const User = mongoose.model("User", UserSchema);
